@@ -1,9 +1,15 @@
-#import datetime
 from fastapi import FastAPI
-#from pydantic import Field
-from backend.schemas.booking import BookingRequest
-from backend.schemas.room import RoomRequest
-from backend.schemas.user import UserRequest
+from backend.schemas import (
+    UserRequest,  
+    UserResponse, 
+    RoomRequest,  
+    RoomResponse, 
+    BookingRequest, 
+    BookingResponse
+)
+#from backend.schemas.booking import BookingRequest
+#from backend.schemas.room import RoomRequest
+#from backend.schemas.user import UserRequest
 
 app = FastAPI()
 
