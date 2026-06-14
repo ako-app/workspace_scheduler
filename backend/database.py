@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker
-#from sqlalchemy.ext.asyncio import AsyncSession
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./reservation.db"
 

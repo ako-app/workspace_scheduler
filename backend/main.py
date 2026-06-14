@@ -7,9 +7,7 @@ from backend.schemas import (
     BookingRequest, 
     BookingResponse
 )
-#from backend.schemas.booking import BookingRequest
-#from backend.schemas.room import RoomRequest
-#from backend.schemas.user import UserRequest
+
 
 app = FastAPI()
 
