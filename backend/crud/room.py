@@ -3,6 +3,14 @@ from sqlalchemy import select
 from backend.models.room import Room
 from backend.schemas.room import RoomRequest
 
+def get_room_by_id(
+        db :Session,
+        room_id: int,
+) -> Room | None:
+    """IDで会議室を1件取得"""
+    stmt = select(Room).where(Room.id == room_id)
+    return db.scalar(stmt)
+
 
 def get_rooms(
         db: Session, 
@@ -29,6 +37,7 @@ def get_room(
 
     return db.scalar(stmt)
 
+# TODO: JWT認証実装後に current_user.id を manager_id に設定
 def create_room(
         db: Session,
         room: RoomRequest,
@@ -36,6 +45,7 @@ def create_room(
 ) -> Room:  
     """会議室登録"""
     db_room = Room(
+        #manager_id=current_user.id,
         room_name = room.room_name,
         capacity = room.capacity,
         # TODO: JWT認証実装後に current_user.id を設定
@@ -48,3 +58,23 @@ def create_room(
     db.refresh(db_room)
 
     return db_room
+
+def update_room(
+        db: Session,
+        room_id: int,
+        room: RoomRequest,
+) -> Room | None:
+     """会議室更新"""
+     db_room = get_room_by_id(db, room_id)
+     if db_room is None:
+         return None
+     
+     db_room.room_name = room.room_name
+     db_room.capacity = room.capacity
+
+     db.commit()
+
+     db.refresh(db_room)
+
+     return db_room
+

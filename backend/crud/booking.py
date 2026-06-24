@@ -3,6 +3,14 @@ from sqlalchemy import select
 from backend.models.booking import Booking
 from backend.schemas.booking import BookingRequest
 
+def get_booking_by_id(
+        db :Session,
+        booking_id: int,
+) -> Booking | None:
+    """IDで予約を1件取得"""
+    stmt = select(Booking).where(Booking.id == booking_id)
+    return db.scalar(stmt)
+
 
 def get_bookings(
         db: Session, 
@@ -28,7 +36,7 @@ def get_booking(
     )
 
     return db.scalar(stmt)
-
+# TODO: JWT認証実装後に current_user.id を user_id に設定
 def create_booking(
         db: Session,
         booking: BookingRequest,
@@ -36,11 +44,11 @@ def create_booking(
 ) -> Booking:  
     """予約登録"""
     db_booking= Booking(
+        #user_id=current_user.id,
         room_id= booking.room_id,
         start_at = booking.start_at,
         end_at = booking.end_at,
         reserved_num = booking.reserved_num,
-        # TODO: JWT認証実装後に id を設定
      )
     
     db.add(db_booking)
@@ -51,3 +59,23 @@ def create_booking(
 
     return db_booking
 
+def update_booking(
+        db: Session,
+        booking_id: int,
+        booking: BookingRequest,
+) -> Booking | None:
+     """予約更新"""
+     db_booking = get_booking_by_id(db, booking_id)
+     if db_booking is None:
+         return None
+     
+     db_booking.room_id = booking.room_id
+     db_booking.start_at = booking.start_at
+     db_booking.end_at = booking.end_at
+     db_booking.reserved_num = booking.reserved_num
+
+     db.commit()
+
+     db.refresh(db_booking)
+
+     return db_booking
