@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from backend.models.user import User
-#from backend.schemas.user import UserRequest, UserResponse
+from backend.schemas.user import UserRequest
 
 
 def get_users(
@@ -17,6 +17,29 @@ def get_users(
     )
 
     return db.scalars(stmt).all()
+
+def create_user(
+        db: Session,
+        user: UserRequest,
+       
+) -> User:  
+    """ユーザー登録"""
+    db_user = User(
+        username = user.username,
+    )
+    db.add(db_user)
+
+    db.commit()
+
+    db.refresh(db_user)
+
+    return db_user
+
+
+
+    
+
+
 
 
 
