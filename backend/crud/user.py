@@ -49,7 +49,11 @@ def update_user(
         user: UserRequest,
 ) -> User | None:
      """ユーザー更新"""
-     db_user = get_user_by_id(db, user_id)
+     db_user = get_user_by_id(
+         db, 
+         user_id,
+     )
+
      if db_user is None:
          return None
      
@@ -61,7 +65,28 @@ def update_user(
 
      return db_user
 
+def delete_user(
+        db: Session,
+        user_id: int,
+) -> bool:
+    """ユーザー削除"""
+    db_user = get_user_by_id(
+        db, 
+        user_id,
+    )
+
+    if db_user is None:
+        return False
     
+    db.delete(db_user)
+
+    db.commit()
+
+    return True
+
+
+
+
 
 
 

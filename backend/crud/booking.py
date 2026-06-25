@@ -26,16 +26,6 @@ def get_bookings(
 
     return db.scalars(stmt).all()
 
-def get_booking(
-        db: Session,
-        booking_id: int,     
-) -> Booking | None:
-    """予約詳細を取得する"""
-    stmt = select(Booking).where(
-        Booking.id == booking_id
-    )
-
-    return db.scalar(stmt)
 # TODO: JWT認証実装後に current_user.id を user_id に設定
 def create_booking(
         db: Session,
@@ -79,3 +69,22 @@ def update_booking(
      db.refresh(db_booking)
 
      return db_booking
+
+def delete_booking(
+        db: Session,
+        booking_id: int,
+) -> bool:
+    """予約削除"""
+    db_booking = get_booking_by_id(
+        db, 
+        booking_id,
+    )
+
+    if db_booking is None:
+        return False
+    
+    db.delete(db_booking)
+
+    db.commit()
+
+    return True

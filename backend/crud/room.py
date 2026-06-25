@@ -26,16 +26,7 @@ def get_rooms(
 
     return db.scalars(stmt).all()
 
-def get_room(
-        db: Session,
-        room_id: int,     
-) -> Room | None:
-    """会議室詳細を取得する"""
-    stmt = select(Room).where(
-        Room.id == room_id
-    )
 
-    return db.scalar(stmt)
 
 # TODO: JWT認証実装後に current_user.id を manager_id に設定
 def create_room(
@@ -78,3 +69,21 @@ def update_room(
 
      return db_room
 
+def delete_room(
+        db: Session,
+        room_id: int,
+) -> bool:
+    """会議室削除"""
+    db_room = get_room_by_id(
+        db, 
+        room_id,
+    )
+
+    if db_room is None:
+        return False
+    
+    db.delete(db_room)
+
+    db.commit()
+
+    return True
