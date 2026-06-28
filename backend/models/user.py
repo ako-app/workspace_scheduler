@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import String
 from backend.database import Base
 from backend.models.mixins import TimestampMixin
 
@@ -27,6 +28,12 @@ class User(TimestampMixin, Base):
         comment="管理者のユーザー名"
     )
 
+    hashed_password: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        comment="ハッシュ化されたパスワード" 
+    )
+    
     #  リレーションシップ
     managed_rooms: Mapped[list[Room]] = relationship(
         back_populates="manager",
