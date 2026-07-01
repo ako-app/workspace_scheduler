@@ -1,12 +1,11 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from backend.core.config import DATABASE_URL
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./reservation.db"
 
 # エンジン作成
 engine = create_engine( 
-    SQLALCHEMY_DATABASE_URL, 
+    DATABASE_URL, 
     connect_args={'check_same_thread':False},
     echo=True
 )

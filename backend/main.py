@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from backend.routers import user, room, booking
+from backend.routers.user import user_router , auth_router
+from backend.routers import room, booking
 
 app = FastAPI(
     title="会議室予約システムAPI",
@@ -20,7 +21,8 @@ def read_root():
         "redoc" : "/redoc",
          }
 # Router
-app.include_router(user.router)
+app.include_router(user_router)
+app.include_router(auth_router)
 app.include_router(room.router)
 app.include_router(booking.router)
 

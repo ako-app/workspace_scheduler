@@ -2,13 +2,13 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from backend.models.user import User
 from backend.schemas.user import UserRequest, UserUpdate
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+password_hash = PasswordHash.recommended()
 
 
 def get_user_by_id(
-        db :Session,
+        db: Session,
         user_id: int,
 ) -> User | None:
     """IDでユーザーを1件取得"""
@@ -16,7 +16,7 @@ def get_user_by_id(
     return db.scalar(stmt)
 
 def get_user_by_username(
-        db :Session,
+        db: Session,
         username: str,
 ) -> User | None:
     """ユーザー名でユーザーを1件取得"""
@@ -29,7 +29,7 @@ def verify_password(
         hashed_password: str,
 ) -> bool:
     """入力されたパスワードとハッシュ化済みパスワードを照合する"""
-    return pwd_context.verify(
+    return password_hash.verify(
         plain_password,
         hashed_password,
     )
@@ -54,7 +54,7 @@ def create_user(
        
 ) -> User:  
     """ユーザー登録"""
-    hashed_password = pwd_context.hash(user.password)
+    hashed_password = password_hash.hash(user.password)
     db_user = User(
         username=user.username,
         hashed_password=hashed_password,
@@ -113,9 +113,28 @@ def delete_user(
 
 
 
-
-
-
+def authenticate_user(
+        db: Session,
+        username: str,
+        password: str,      
+) -> User | None:
+    """ログイン時にユーザー名とパスワードを確認する"""
+    user = get_user_by_username(
+        db,
+        username
+    )
+    if user is None:
+        return None
+    
+    if not verify_password(
+        password,
+        user.hashed_password
+    ):
+        return None
+    
+    return user
+    
+    
 
 
 
