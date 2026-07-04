@@ -83,6 +83,7 @@ def update_user_endpoint(
 @user_router.delete(
     "/{user_id}",
     status_code=204,
+    response_model=None,
 )
 def delete_user_endpoint(
     user_id: int,

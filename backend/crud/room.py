@@ -27,19 +27,17 @@ def get_rooms(
     return db.scalars(stmt).all()
 
 
-
-# TODO: JWT認証実装後に current_user.id を manager_id に設定
 def create_room(
         db: Session,
         room: RoomRequest,
+        manager_id: int
        
 ) -> Room:  
     """会議室登録"""
     db_room = Room(
-        #manager_id=current_user.id,
+        manager_id=manager_id,
         room_name = room.room_name,
         capacity = room.capacity,
-        # TODO: JWT認証実装後に current_user.id を設定
      )
     
     db.add(db_room)

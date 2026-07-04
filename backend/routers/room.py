@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.database import get_db
+from backend.auth.dependencies import get_current_user
+from backend.models.user import User
 from backend.schemas import RoomResponse, RoomRequest
 from backend.crud.room import (
     get_rooms, 
@@ -51,13 +53,14 @@ def read_room(
 )
 def create_room_endpoint(
     room: RoomRequest,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """会議室を作成する"""
     return create_room(
         db,
         room,
-
+        manager_id = current_user.id
     )
 
 @router.put(
@@ -67,27 +70,53 @@ def create_room_endpoint(
 def update_room_endpoint(
     room_id: int,
     room: RoomRequest,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """会議室を更新する"""
+    """会議室を更新する(管理者本人のみ)"""
+    db_room = get_room_by_id(db, room_id)
+
+    if db_room is None:
+        raise HTTPException(
+            status_code=404, 
+            detail="会議室情報が見つかりません",
+        )
+    if db_room.manager_id != current_user.id:
+        raise HTTPException(
+            status_code=403, 
+            detail="この操作を行う権限がありません",
+        )
+
     room_update = update_room(
         db,
         room_id,
         room,
     )
-    if room_update is None:
-        raise HTTPException(status_code=404, detail="会議室情報が見つかりません",)
     return room_update
 
 @router.delete(
     "/{room_id}",
     status_code=204,
+    response_model=None,
 )
 def delete_room_endpoint(
     room_id: int,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """会議室を削除する"""
+    """会議室を削除する(本人のみ)"""
+    db_room = get_room_by_id(db, room_id)
+    if db_room is None:
+        raise HTTPException(
+            status_code=404, 
+            detail="会議室情報が見つかりません",
+
+        )
+    if db_room.manager_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="この操作を行う権限がありません",
+        )
     room_delete = delete_room(
         db,
         room_id,

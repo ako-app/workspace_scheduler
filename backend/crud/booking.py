@@ -26,15 +26,15 @@ def get_bookings(
 
     return db.scalars(stmt).all()
 
-# TODO: JWT認証実装後に current_user.id を user_id に設定
 def create_booking(
         db: Session,
         booking: BookingRequest,
+        user_id : int,
        
 ) -> Booking:  
     """予約登録"""
     db_booking= Booking(
-        #user_id=current_user.id,
+        user_id=user_id,
         room_id= booking.room_id,
         start_at = booking.start_at,
         end_at = booking.end_at,
