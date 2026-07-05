@@ -117,6 +117,11 @@ def delete_room_endpoint(
             status_code=403,
             detail="この操作を行う権限がありません",
         )
+    if db_room.bookings:
+        raise HTTPException(
+            status_code=409,
+            detail="この会議室には予約が存在するため削除できません"
+        )
     room_delete = delete_room(
         db,
         room_id,

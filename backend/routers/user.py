@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordRequestForm
 from backend.database import get_db
 from backend.auth.jwt import create_access_token
-from backend.schemas import UserResponse, UserRequest, UserUpdate, UserLogin, TokenResponse
+from backend.schemas import UserResponse, UserRequest, UserUpdate, TokenResponse
 from backend.crud.user import (
     get_users, 
     get_user_by_id, 
@@ -113,14 +114,14 @@ auth_router = APIRouter(
     response_model=TokenResponse,
 )
 def login_user_endpoint(
-    user: UserLogin,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
     """ユーザーのログイン管理"""
     user_auth = authenticate_user(
         db,
-        user.username,
-        user.password,
+        form_data.username,
+        form_data.password,
 
     )
     if user_auth is None:

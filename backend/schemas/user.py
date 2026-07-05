@@ -27,23 +27,6 @@ class UserUpdate(BaseModel):
         examples=["tanaka_taro"],
     )
     
-# 管理者ユーザー情報ログインスキーマ
-class UserLogin(BaseModel):
-    username: str = Field(
-        ...,
-        min_length=2,
-        max_length=12,
-        description="管理者ユーザー名",
-        examples=["tanaka_taro"]
-
-    )
-    password: str = Field(
-        ...,
-        min_length=8,
-        description="パスワード",
-        examples=["password123"]
-    )
-    
 # 管理者ユーザー情報レスポンス用スキーマ
 class UserResponse(BaseModel):
     id: int = Field(
