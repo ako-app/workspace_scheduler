@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from backend.models.room import Room
+from backend.database import commit_or_rollback
 from backend.schemas.room import RoomRequest
 
 def get_room_by_id(
@@ -42,7 +43,7 @@ def create_room(
     
     db.add(db_room)
 
-    db.commit()
+    commit_or_rollback(db)
 
     db.refresh(db_room)
 
@@ -61,7 +62,7 @@ def update_room(
      db_room.room_name = room.room_name
      db_room.capacity = room.capacity
 
-     db.commit()
+     commit_or_rollback(db)
 
      db.refresh(db_room)
 
@@ -82,6 +83,6 @@ def delete_room(
     
     db.delete(db_room)
 
-    db.commit()
+    commit_or_rollback(db)
 
     return True

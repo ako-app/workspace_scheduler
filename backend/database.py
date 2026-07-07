@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
 from backend.core.config import DATABASE_URL
 
 
@@ -21,10 +22,24 @@ SessionLocal = sessionmaker(
 class Base(DeclarativeBase):
     pass
 
-# データベースセッションの取得
-def get_db():  
+
+def get_db():
+    """データベースセッションの取得""" 
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+def commit_or_rollback(
+        db: Session
+) -> None:
+    """commitを実行し、失敗した場合はrollbackして例外を再送出する。"""
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise
+
+    
+

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from backend.models.booking import Booking
+from backend.database import commit_or_rollback
 from backend.schemas.booking import BookingRequest
 
 def get_booking_by_id(
@@ -43,7 +44,7 @@ def create_booking(
     
     db.add(db_booking)
 
-    db.commit()
+    commit_or_rollback(db)
 
     db.refresh(db_booking)
 
@@ -64,7 +65,7 @@ def update_booking(
      db_booking.end_at = booking.end_at
      db_booking.reserved_num = booking.reserved_num
 
-     db.commit()
+     commit_or_rollback(db)
 
      db.refresh(db_booking)
 
@@ -85,6 +86,6 @@ def delete_booking(
     
     db.delete(db_booking)
 
-    db.commit()
+    commit_or_rollback(db)
 
     return True

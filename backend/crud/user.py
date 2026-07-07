@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from backend.models.user import User
+from backend.database import commit_or_rollback
 from backend.schemas.user import UserRequest, UserUpdate
 from pwdlib import PasswordHash
 
@@ -61,7 +62,7 @@ def create_user(
     )
     db.add(db_user)
 
-    db.commit()
+    commit_or_rollback(db)
 
     db.refresh(db_user)
 
@@ -83,10 +84,7 @@ def update_user(
      
      db_user.username = user.username
 
-     #if user.password is not None:
-        # db_user.hashed_password = pwd_context.hash(user.password)
-
-     db.commit()
+     commit_or_rollback(db)
 
      db.refresh(db_user)
 
@@ -107,7 +105,7 @@ def delete_user(
     
     db.delete(db_user)
 
-    db.commit()
+    commit_or_rollback(db)
 
     return True
 
@@ -121,7 +119,7 @@ def authenticate_user(
     """ログイン時にユーザー名とパスワードを確認する"""
     user = get_user_by_username(
         db,
-        username
+        username,
     )
     if user is None:
         return None
