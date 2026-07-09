@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+
 from backend.models.booking import Booking
 from backend.database import commit_or_rollback
 from backend.schemas.booking import BookingRequest
@@ -27,6 +30,24 @@ def get_bookings(
 
     return db.scalars(stmt).all()
 
+def has_overlapping_booking(
+        db: Session,
+        room_id: int,
+        start_at: datetime,
+        end_at: datetime,
+        exclude_booking_id: int | None = None,
+) -> bool:
+     """指定した部屋・時間帯に重複する予約が存在するか"""
+     stmt = select(Booking).where(
+         Booking.room_id == room_id,
+         Booking.start_at < end_at,
+         Booking.end_at > start_at,
+     )
+     if exclude_booking_id is not None:
+         stmt = stmt.where(Booking.id != exclude_booking_id)
+
+     return db.scalar(stmt) is not None
+
 def create_booking(
         db: Session,
         booking: BookingRequest,
@@ -34,6 +55,14 @@ def create_booking(
        
 ) -> Booking:  
     """予約登録"""
+    if has_overlapping_booking(
+        db,
+        booking.room_id,
+        booking.start_at,
+        booking.end_at,
+    ):
+        raise ValueError("この時間はすでに予約されています")
+    
     db_booking= Booking(
         user_id=user_id,
         room_id= booking.room_id,
@@ -59,6 +88,15 @@ def update_booking(
      db_booking = get_booking_by_id(db, booking_id)
      if db_booking is None:
          return None
+     
+     if has_overlapping_booking(
+         db,
+         booking.room_id,
+         booking.start_at,
+         booking.end_at,
+         exclude_booking_id=booking_id,
+     ):
+         raise ValueError("この時間帯はすでに予約されています")
      
      db_booking.room_id = booking.room_id
      db_booking.start_at = booking.start_at
@@ -89,3 +127,4 @@ def delete_booking(
     commit_or_rollback(db)
 
     return True
+

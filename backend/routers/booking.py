@@ -43,7 +43,10 @@ def read_booking(
         booking_id,
     )
     if booking is None:
-        raise HTTPException(status_code=404, detail="予約情報が見つかりません",)
+        raise HTTPException(
+            status_code=404, 
+            detail="予約情報が見つかりません",
+        )
     return booking
 
 @router.post(
@@ -57,11 +60,17 @@ def create_booking_endpoint(
     db: Session = Depends(get_db),
 ):
     """予約を作成する"""
-    return create_booking(
-        db,
-        booking,
-        user_id = current_user.id
-    )
+    try:
+        return create_booking(
+            db,
+            booking,
+            user_id = current_user.id
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=409,
+            detail=str(e),
+        )
 
 @router.put(
     "/{booking_id}",
@@ -85,16 +94,18 @@ def update_booking_endpoint(
             status_code=403, 
             detail="この操作を行う権限がありません",
         )
-
-
-
-    booking_update = update_booking(
-        db,
-        booking_id,
-        booking,
-    )
-    if booking_update is None:
-        raise HTTPException(status_code=404, detail="予約が見つかりません",)
+    try:
+        booking_update = update_booking(
+            db,
+            booking_id,
+            booking,
+       )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=409, 
+            detail=str(e),
+        )
+    
     return booking_update
 
 @router.delete(
