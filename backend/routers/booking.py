@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.database import get_db
 from backend.auth.dependencies import get_current_user
+from backend.core.exceptions import BookingConflictError
 from backend.models.user import User
 from backend.schemas import BookingResponse, BookingRequest
 from backend.crud.booking import (
@@ -24,10 +25,15 @@ router = APIRouter(
 def read_bookings(
     skip: int = 0,
     limit: int = 100,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """予約一覧を取得する"""
-    return get_bookings(db, skip=skip, limit=limit)
+    return get_bookings(
+        db, 
+        skip=skip, 
+        limit=limit,
+    )
 
 @router.get(
     "/{booking_id}",
@@ -35,6 +41,7 @@ def read_bookings(
 )
 def read_booking(
     booking_id: int,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """IDで予約を1件取得"""
@@ -66,7 +73,7 @@ def create_booking_endpoint(
             booking,
             user_id = current_user.id
         )
-    except ValueError as e:
+    except BookingConflictError as e:
         raise HTTPException(
             status_code=409,
             detail=str(e),
@@ -100,7 +107,7 @@ def update_booking_endpoint(
             booking_id,
             booking,
        )
-    except ValueError as e:
+    except BookingConflictError as e:
         raise HTTPException(
             status_code=409, 
             detail=str(e),
