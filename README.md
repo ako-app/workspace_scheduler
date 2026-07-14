@@ -1,5 +1,11 @@
 # 会議室管理システム
 
+## 画面遷移図
+
+Figma:
+https://www.figma.com/design/9kjQ75LCkp3J7xANDaTqsj/%E7%84%A1%E9%A1%8C?node-id=0-1&t=17sjkR6fWiIQPDZe-1
+
+
 ## 1. サービス概要
 
 本サービスは、会議室の予約情報や利用状況を一元管理できるシステムです。
