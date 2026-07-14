@@ -3,7 +3,7 @@
 ## 画面遷移図
 
 Figma:
-https://www.figma.com/design/9kjQ75LCkp3J7xANDaTqsj/%E7%84%A1%E9%A1%8C?node-id=0-1&t=17sjkR6fWiIQPDZe-1
+https://www.figma.com/design/9kjQ75LCkp3J7xANDaTqsj/%E7%84%A1%E9%A1%8C?node-id=28-374&t=UO1w46tuH3pIBwfp-1
 
 
 ## 1. サービス概要
