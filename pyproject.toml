@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "aco"}
 ]
-requires-python = ">=3.14"
+requires-python = ">=3.14,<3.15"
 dependencies = [
     "fastapi (>=0.136.3,<0.137.0)",
     "sqlalchemy (>=2.0.50,<3.0.0)",
