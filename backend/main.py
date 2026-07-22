@@ -1,31 +1,28 @@
 from fastapi import FastAPI
-from backend.schemas import (
-    UserRequest,  
-    UserResponse, 
-    RoomRequest,  
-    RoomResponse, 
-    BookingRequest, 
-    BookingResponse
+from backend.routers.user import user_router , auth_router
+from backend.routers import room, booking
+
+app = FastAPI(
+    title="会議室予約システムAPI",
+    description="会議室の予約を管理することにより、管理業務を効率化するためのREST API",
+    version="1.0.0",
 )
-#from backend.schemas.booking import BookingRequest
-#from backend.schemas.room import RoomRequest
-#from backend.schemas.user import UserRequest
-
-app = FastAPI()
-
-@app.get("/")#トップページ 非同期をつける
-async def index():
-    return {"message": "ここはトップページ"}
-
-@app.post("/users")
-async def users(user: UserRequest): #リクエストボディUserをuserで受け取る
-    return {"user": user}
-@app.post("/rooms")
-async def users(room: RoomRequest): #リクエストボディUserをuserで受け取る
-    return {"room": room}
-
-
-@app.post("/bookings")
-async def users(booking: BookingRequest): #リクエストボディUserをuserで受け取る
-    return {"booking": booking}
+# ルートエンドポイント
+@app.get(
+    "/",
+    tags=["Root"]
+)
+def read_root():
+    """APIのエンドポイント"""
+    return {
+        "message": "会議室予約システムにようこそ",
+        "version": "1.0.0",
+        "docs" : "/docs",
+        "redoc" : "/redoc",
+         }
+# Router
+app.include_router(user_router)
+app.include_router(auth_router)
+app.include_router(room.router)
+app.include_router(booking.router)
 

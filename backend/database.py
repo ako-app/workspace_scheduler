@@ -1,13 +1,12 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import sessionmaker
-#from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from backend.core.config import DATABASE_URL
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./reservation.db"
 
 # エンジン作成
 engine = create_engine( 
-    SQLALCHEMY_DATABASE_URL, 
+    DATABASE_URL, 
     connect_args={'check_same_thread':False},
     echo=True
 )
@@ -23,10 +22,24 @@ SessionLocal = sessionmaker(
 class Base(DeclarativeBase):
     pass
 
-# データベースセッションの取得
-def get_db():  
+
+def get_db():
+    """データベースセッションの取得""" 
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+def commit_or_rollback(
+        db: Session
+) -> None:
+    """commitを実行し、失敗した場合はrollbackして例外を再送出する。"""
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise
+
+    
+
