@@ -1,5 +1,15 @@
 # 会議室管理システム
 
+## 画面遷移図
+
+Figma:
+https://www.figma.com/design/9kjQ75LCkp3J7xANDaTqsj/%E7%84%A1%E9%A1%8C?node-id=28-374&t=UO1w46tuH3pIBwfp-1
+
+## ER図
+
+Mermaid Live:
+https://mermaid.live/edit#pako:eNqtUz1PwzAQ_SvRzWmVNKGNs4JYEBILC4pUmdgkUYld2Q5Q2g4ghJBgYGFg5A8wMfF3itS_gZ30g9JQJIQn37v37t5ZviHEnFAIgYqdDCcC5xGz9CkkFdIajRoNPrQE57m0QiuC6evL9PF2cvU8ub6PoIZ6zHkvY0nF_ni_m77drLKrWpvYT5Prh5nga4NhFZiTMWVlxDrYW0JSCV2opDKcU-twPZdimVLS7WMpz7kgyzzBiqpMi2JB9ZV0sapJFn2ykhzP7VUTbbZnoBwznFDR1anddXemSnfNutHFuI_jTA3-zfDi1X_3bN7zu2GDl27rcKoFZ7opK_IaS1JhoerdUvbDGH-ZEWxIREYgVKKgNuRU5NiEUE4cgUppTiMwv45g0TNfbaw1fcyO9GBzmeBFkkJ4gk-ljqpWsyVZULRtKrZ5wRSEroO8sgiEQ7iA0HdQ03VcP_BQG7nIdW0YaLTddDotDzkIeUjD_tiGy7Kr0wy2Ou2g5fl-4LdaXqdtAyWZ4mK_2tFyVcefrr0vgQ
+
 ## 1. サービス概要
 
 本サービスは、会議室の予約情報や利用状況を一元管理できるシステムです。
