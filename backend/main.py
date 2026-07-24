@@ -1,11 +1,19 @@
 from fastapi import FastAPI
 from backend.routers.user import user_router , auth_router
 from backend.routers import room, booking
+from fastapi.staticfiles import StaticFiles
+from backend.views.pages import view_router
 
 app = FastAPI(
     title="会議室予約システムAPI",
     description="会議室の予約を管理することにより、管理業務を効率化するためのREST API",
     version="1.0.0",
+)
+# # CSS・JavaScript・画像などの静的ファイルを配信
+app.mount(
+    "/static",
+    StaticFiles(directory="frontend/static"),
+    name="static",
 )
 # ルートエンドポイント
 @app.get(
@@ -20,9 +28,10 @@ def read_root():
         "docs" : "/docs",
         "redoc" : "/redoc",
          }
-# Router
+# APIルーターと画面表示用ルーターを登録
 app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(room.router)
 app.include_router(booking.router)
+app.include_router(view_router)
 
