@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+会議室予約システム
+{% endblock %}
+
+{% block content %}
+<section class="top-page text-center py-5">
+   <h1 class="mb-3">会議室予約システム</h1>
+
+   <p class="text-secondary mb-4">
+     会議室の利用状況を一元管理し、<br>
+     確認や情報共有の負担を軽減するとともに、<br>
+     清掃や管理作業を見直すための材料を提供します。
+   </p>
+
+   <div class="d-flex justify-content-center gap-3">
+       <a href="/register" class="btn btn-primary">
+           ユーザー登録
+       </a>
+       <a href="/login" class="btn btn-outline-primary">
+           ログイン
+       </a>
+   </div>
+</section>
+{% endblock %}

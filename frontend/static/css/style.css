@@ -1,0 +1,39 @@
+:root {
+    --primary-color: #3c83f6;
+    --primary-hover-color: #2f73e6;
+    --text-color: #1f2937;
+    --subtext-color: #6b7280;
+}
+
+body {
+    color: var(--text-color);
+}
+
+.navbar-brand {
+    color: var(--primary-color);
+}
+
+.navbar-brand:hover {
+    color: var(--primary-hover-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
