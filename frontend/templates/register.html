@@ -1,9 +1,70 @@
 {%  extends "base.html" %}
 
-{%  block title %}ユーザータイトル{% endblock %}
+{%  block title %}
+ユーザー登録 | 会議室予約システム
+{% endblock %}
 
 {% block content%}
-<h1>ユーザー登録</h1>
+<section class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <h1 class="text-center mb-4">ユーザー登録</h1>
 
+        <form id="register-form">
+            <div class="mb-3">
+                <label for="username" class="form-label">
+                    ユーザー名
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">
+                    パスワード
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div
+                id="error-message"
+                class="text-danger mb-3"
+                role="alert"
+            ></div>
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100"
+            >
+                登録する
+            </button>
+        </form>
+
+        <p class="text-center mt-3">
+            すでにアカウントをお持ちの方は
+            <a href="/login">ログイン</a>
+        </p>
+    
+    </div>
+
+
+</section>
+
+{% endblock%}
+
+{% block script %}
+<script src="{{url_for('static', path='/js/register.js')}}"></script>
 {% endblock%}
 
