@@ -6,8 +6,16 @@ view_router = APIRouter()
 templates = Jinja2Templates(
     directory="frontend/templates",
 )
+# TOPページを表示
+@view_router.get("/", include_in_schema=False)
+def show_top_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={}
+    )
 
-# Jinja2テンプレートを使ってHTML画面を表示
+# ユーザー登録画面を表示
 @view_router.get("/register", include_in_schema=False)
 def show_register_page(request: Request):
     return templates.TemplateResponse(
@@ -15,3 +23,15 @@ def show_register_page(request: Request):
         name="register.html",
         context={}
     )
+
+# ログイン画面を表示
+@view_router.get("/login", include_in_schema=False)
+def show_register_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context={}
+    )
+
+
+

@@ -17,7 +17,7 @@ app.mount(
 )
 # ルートエンドポイント
 @app.get(
-    "/",
+    "/api",
     tags=["Root"]
 )
 def read_root():
