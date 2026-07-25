@@ -7,6 +7,7 @@ from backend.schemas import UserResponse, UserRequest, UserUpdate, TokenResponse
 from backend.crud.user import (
     get_users, 
     get_user_by_id, 
+    get_user_by_username,
     create_user, 
     update_user, 
     delete_user,
@@ -57,6 +58,16 @@ def create_user_endpoint(
     db: Session = Depends(get_db),
 ):
     """ユーザーを作成する"""
+    existing_user = get_user_by_username(
+        db,
+        user.username,
+    )
+    if existing_user is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="このユーザー名はすでに使用されています",
+        )
+
     return create_user(
         db,
         user,
@@ -127,7 +138,7 @@ def login_user_endpoint(
     if user_auth is None:
         raise HTTPException(
             status_code=401,
-            detail="ユーザー名またはパスワードが正しくありません"
+            detail="ユーザー名またはパスワードが正しくありません",
         )
     access_token = create_access_token(
         data={"sub": user_auth.username}
