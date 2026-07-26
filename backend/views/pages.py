@@ -12,7 +12,7 @@ def show_top_page(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={}
+        context={},
     )
 
 # ユーザー登録画面を表示
@@ -21,16 +21,24 @@ def show_register_page(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="register.html",
-        context={}
+        context={},
     )
 
 # ログイン画面を表示
 @view_router.get("/login", include_in_schema=False)
-def show_register_page(request: Request):
+def show_login_page(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="login.html",
-        context={}
+        context={},
+    )
+# Room画面を表示
+@view_router.get("/room", include_in_schema=False)
+def show_room_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="room.html",
+        context={},
     )
 
 
