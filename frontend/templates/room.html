@@ -5,19 +5,20 @@
 {% endblock %}
 
 {% block content %}
-<section class="text-center">
-    <h1 class="mb-4">会議室画面</h1>
+<section class="mb-4">
 
-    <p id="login-message">
-        ログイン情報を確認しています。
-    </p>
+   <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>会議室一覧</h1>
+        <a href="/room/new" class="btn btn-primary">
+            会議室を登録する
+        </a>
+   </div>
 
-    <button
-        id="logout-button"
-        class="btn btn-outline-danger"
-    >
-        ログアウト
-    </button>
+   <div id="error-message" class="text-danger mb-3"></div>
+   <div id="room-list" class="row g-3">
+        <!-- JavaScriptで会議室を表示 -->
+   </div>
+
 </section>
 {% endblock %}
 
