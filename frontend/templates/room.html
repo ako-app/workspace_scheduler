@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+会議室 | 会議室予約システム
+{% endblock %}
+
+{% block content %}
+<section class="text-center">
+    <h1 class="mb-4">会議室画面</h1>
+
+    <p id="login-message">
+        ログイン情報を確認しています。
+    </p>
+
+    <button
+        id="logout-button"
+        class="btn btn-outline-danger"
+    >
+        ログアウト
+    </button>
+</section>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', path='/js/room.js') }}"></script>
+{% endblock %}
