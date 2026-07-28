@@ -48,7 +48,14 @@ def show_room_registration_page(request: Request):
         name="room-registration.html",
         context={},
     )
-
-
-
-
+# 会議室編集画面を表示
+@view_router.get("/room/{room_id}/edit", include_in_schema=False)
+def show_room_edit_page(
+    request: Request,
+    room_id: int,
+    ):
+    return templates.TemplateResponse(
+        request=request,
+        name="room-edit.html",
+        context={"room_id": room_id}
+    )
