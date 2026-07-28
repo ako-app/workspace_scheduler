@@ -40,6 +40,15 @@ def show_room_page(request: Request):
         name="room.html",
         context={},
     )
+# 会議室登録画面を表示
+@view_router.get("/room/new", include_in_schema=False)
+def show_room_registration_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="room-registration.html",
+        context={},
+    )
+
 
 
 
