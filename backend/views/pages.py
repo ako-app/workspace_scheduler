@@ -32,6 +32,7 @@ def show_login_page(request: Request):
         name="login.html",
         context={},
     )
+
 # Room画面を表示
 @view_router.get("/room", include_in_schema=False)
 def show_room_page(request: Request):
@@ -40,6 +41,7 @@ def show_room_page(request: Request):
         name="room.html",
         context={},
     )
+
 # 会議室登録画面を表示
 @view_router.get("/room/new", include_in_schema=False)
 def show_room_registration_page(request: Request):
@@ -48,14 +50,27 @@ def show_room_registration_page(request: Request):
         name="room-registration.html",
         context={},
     )
+
 # 会議室編集画面を表示
 @view_router.get("/room/{room_id}/edit", include_in_schema=False)
 def show_room_edit_page(
     request: Request,
     room_id: int,
-    ):
+):
     return templates.TemplateResponse(
         request=request,
         name="room-edit.html",
-        context={"room_id": room_id}
+        context={"room_id": room_id},
+    )
+
+# 会議室削除画面を表示
+@view_router.get("/room/{room_id}/delete", include_in_schema=False)
+def show_room_delete_page(
+    request: Request, 
+    room_id :int,
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="room-delete.html",
+        context={"room_id": room_id},
     )
