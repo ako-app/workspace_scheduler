@@ -74,3 +74,12 @@ def show_room_delete_page(
         name="room-delete.html",
         context={"room_id": room_id},
     )
+
+# 予約一覧画面表示
+@view_router.get("/booking", include_in_schema=False)
+def show_booking_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="booking.html",
+        context={}
+    )
