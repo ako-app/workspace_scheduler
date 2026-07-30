@@ -67,7 +67,7 @@ def show_room_edit_page(
 @view_router.get("/room/{room_id}/delete", include_in_schema=False)
 def show_room_delete_page(
     request: Request, 
-    room_id :int,
+    room_id: int,
 ):
     return templates.TemplateResponse(
         request=request,
@@ -91,4 +91,16 @@ def show_booking_registration_page(request: Request):
         request=request,
         name="booking-registration.html",
         context={},
+    )
+
+# 予約修正画面表示
+@view_router.get("/booking/{booking_id}/edit", include_in_schema=False)
+def show_booking_edit_page(
+    request: Request,
+    booking_id: int,
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="booking-edit.html",
+        context={"booking_id": booking_id},
     )
