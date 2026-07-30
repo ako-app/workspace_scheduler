@@ -81,5 +81,14 @@ def show_booking_page(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="booking.html",
-        context={}
+        context={},
+    )
+
+# 予約登録画面表示
+@view_router.get("/booking/new", include_in_schema=False)
+def show_booking_registration_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="booking-registration.html",
+        context={},
     )
