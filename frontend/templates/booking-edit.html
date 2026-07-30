@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}
+予約編集 | 会議室予約システム
+{% endblock %}
+
+{% block content %}
+<section class="row justify-content-center">
+    <div class="col-md-6">
+        <h1 class="text-center mb-4">予約を編集する</h1>
+
+        <div
+            id="error-message"
+            class="text-danger  text-center mb-3"
+            role="alert"
+        ></div>
+
+        <form id="booking-edit-form" data-booking-id="{{ booking_id }}">
+            <div class="mb-3">
+                <label for="room-id" class="form-label">
+                    会議室
+                </label>
+
+                <select
+                    id="room-id"
+                    name="room_id"
+                    class="form-select"
+                    required
+                >
+                    <option value="">選択してください</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="start-at" class="form-label">
+                    開始日時
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="start-at"
+                    name="start_at"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="mb-3">
+                <label for="end-at" class="form-label">
+                    終了日時
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="end-at"
+                    name="end_at"
+                    class="form-control"
+                    required
+                >
+            
+            </div>
+
+            <div class="mb-4">
+                <label for="reserved-num" class="form-label">
+                    予約人数
+                </label>
+
+                <input
+                    type="number"
+                    id="reserved-num"
+                    name="reserved_num"
+                    class="form-control"
+                    min="1"
+                    step="1"
+                    required
+                >
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <a 
+                    href="/booking"
+                    class="btn btn-outline-secondary"
+                
+                
+                >
+                    キャンセル
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    更新する
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', path='/js/booking-edit.js') }}"></script>
+{% endblock %}
