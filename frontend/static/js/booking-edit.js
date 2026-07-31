@@ -1,4 +1,4 @@
-const bookingEditForm = document.getElementById("booking-edit-form");
+const bookingEditForm = document.getElementById("booking-delete-form");
 const roomIdSelect = document.getElementById("room-id");
 const startAtInput = document.getElementById("start-at");
 const endAtInput = document.getElementById("end-at");

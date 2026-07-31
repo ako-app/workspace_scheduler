@@ -104,3 +104,15 @@ def show_booking_edit_page(
         name="booking-edit.html",
         context={"booking_id": booking_id},
     )
+
+# 予約削除画面表示
+@view_router.get("/booking/{booking_id}/delete", include_in_schema=False)
+def show_booking_delete_page(
+    request: Request,
+    booking_id: int,
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="booking-delete.html",
+        context={"booking_id": booking_id},
+    )
