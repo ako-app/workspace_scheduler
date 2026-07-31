@@ -141,6 +141,7 @@ roomEditForm.addEventListener("submit", async (event) => {
   }
 });
 
+// ログアウトボタン
 if (logoutButton) {
   logoutButton.addEventListener("click", () => {
     sessionStorage.removeItem("access_token");
