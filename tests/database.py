@@ -12,7 +12,7 @@ testing_engine = create_engine(
 
 # テスト用セッションを生成するクラス
 TestingSessionLocal = sessionmaker(
-    bind=test_engine,
+    bind=testing_engine,
     autocommit=False,
     autoflush=False,
 )
