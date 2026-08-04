@@ -1,11 +1,8 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
 import jwt
 
-from backend.core.config import (
-    SECRET_KEY,
-    ALGORITHM,
-    ACCESS_TOKEN_EXPIRE_MINUTES
-)
+from backend.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 
 
 def create_access_token(
@@ -15,7 +12,7 @@ def create_access_token(
     """JWTアクセストークンを作成する"""
     to_encode = data.copy()
 
-    expire = datetime.now(timezone.utc) + (
+    expire = datetime.now(UTC) + (
         expires_delta
         if expires_delta is not None
         else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

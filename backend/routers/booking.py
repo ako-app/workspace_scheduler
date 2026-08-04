@@ -1,27 +1,30 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import Annotated
-from backend.database import get_db
+
 from backend.auth.dependencies import get_current_user
 from backend.core.exceptions import BookingConflictError
-from backend.models.user import User
-from backend.schemas import BookingResponse, BookingRequest
 from backend.crud.booking import (
-    get_bookings, 
-    get_booking_by_id, 
-    create_booking, 
-    update_booking, 
-    delete_booking
+    create_booking,
+    delete_booking,
+    get_booking_by_id,
+    get_bookings,
+    update_booking,
 )
+from backend.database import get_db
+from backend.models.user import User
+from backend.schemas import BookingRequest, BookingResponse
 
 router = APIRouter(
     prefix="/bookings",
     tags=["Bookings"],
 )
 
+
 @router.get(
     "/",
-    response_model=list[BookingResponse],     
+    response_model=list[BookingResponse],
 )
 def read_bookings(
     current_user: Annotated[User, Depends(get_current_user)],
@@ -31,10 +34,11 @@ def read_bookings(
 ):
     """予約一覧を取得する"""
     return get_bookings(
-        db, 
-        skip=skip, 
+        db,
+        skip=skip,
         limit=limit,
     )
+
 
 @router.get(
     "/{booking_id}",
@@ -52,16 +56,13 @@ def read_booking(
     )
     if booking is None:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail="予約情報が見つかりません",
         )
     return booking
 
-@router.post(
-    "/", 
-    response_model=BookingResponse, 
-    status_code=201
-)
+
+@router.post("/", response_model=BookingResponse, status_code=201)
 def create_booking_endpoint(
     booking: BookingRequest,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -80,6 +81,7 @@ def create_booking_endpoint(
             detail=str(e),
         )
 
+
 @router.put(
     "/{booking_id}",
     response_model=BookingResponse,
@@ -94,12 +96,12 @@ def update_booking_endpoint(
     db_booking = get_booking_by_id(db, booking_id)
     if db_booking is None:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail="予約情報が見つかりません",
         )
     if db_booking.user_id != current_user.id:
         raise HTTPException(
-            status_code=403, 
+            status_code=403,
             detail="この操作を行う権限がありません",
         )
     try:
@@ -107,14 +109,15 @@ def update_booking_endpoint(
             db,
             booking_id,
             booking,
-       )
+        )
     except BookingConflictError as e:
         raise HTTPException(
-            status_code=409, 
+            status_code=409,
             detail=str(e),
         )
-    
+
     return booking_update
+
 
 @router.delete(
     "/{booking_id}",
@@ -130,16 +133,15 @@ def delete_booking_endpoint(
     db_booking = get_booking_by_id(db, booking_id)
     if db_booking is None:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail="予約情報が見つかりません",
-
         )
     if db_booking.user_id != current_user.id:
         raise HTTPException(
             status_code=403,
             detail="この操作を行う権限がありません",
         )
-    
+
     booking_delete = delete_booking(
         db,
         booking_id,
@@ -149,8 +151,3 @@ def delete_booking_endpoint(
             status_code=404,
             detail="予約情報が見つかりません",
         )
-    return
-    
-
-
-

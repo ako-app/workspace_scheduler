@@ -24,13 +24,12 @@ def client():
 @pytest.fixture
 def test_user(client):
     response = client.post(
-        '/users/',
+        "/users/",
         json={
             "username": "testuser",
             "password": "password123",
         },
-
-    ) 
+    )
     assert response.status_code == 201
     return response.json()
 
@@ -48,9 +47,7 @@ def auth_headers(client, test_user):
     assert response.status_code == 200
     access_token = response.json()["access_token"]
 
-    return {
-        "Authorization":f"Bearer {access_token}"
-    }
+    return {"Authorization": f"Bearer {access_token}"}
 
 
 # テスト用会議室
@@ -110,15 +107,13 @@ def other_auth_headers(client, other_user):
     response = client.post(
         "/auth/login",
         data={
-             "username": "otheruser",
-             "password": "password123",
-        }, 
+            "username": "otheruser",
+            "password": "password123",
+        },
     )
     assert response.status_code == 200
     access_token = response.json()["access_token"]
-    return{
-        "Authorization": f"Bearer {access_token}"
-    } 
+    return {"Authorization": f"Bearer {access_token}"}
 
 
 @pytest.fixture
