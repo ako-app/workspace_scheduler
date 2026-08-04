@@ -1,26 +1,29 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import Annotated
-from backend.database import get_db
+
 from backend.auth.dependencies import get_current_user
-from backend.models.user import User
-from backend.schemas import RoomResponse, RoomRequest
 from backend.crud.room import (
-    get_rooms, 
-    get_room_by_id, 
-    create_room, 
-    update_room, 
-    delete_room
+    create_room,
+    delete_room,
+    get_room_by_id,
+    get_rooms,
+    update_room,
 )
+from backend.database import get_db
+from backend.models.user import User
+from backend.schemas import RoomRequest, RoomResponse
 
 router = APIRouter(
     prefix="/rooms",
     tags=["Rooms"],
 )
 
+
 @router.get(
     "/",
-    response_model=list[RoomResponse],     
+    response_model=list[RoomResponse],
 )
 def read_rooms(
     db: Annotated[Session, Depends(get_db)],
@@ -29,6 +32,7 @@ def read_rooms(
 ):
     """会議室一覧を取得する"""
     return get_rooms(db, skip=skip, limit=limit)
+
 
 @router.get(
     "/{room_id}",
@@ -44,14 +48,14 @@ def read_room(
         room_id,
     )
     if room is None:
-        raise HTTPException(status_code=404, detail="会議室情報が見つかりません",)
+        raise HTTPException(
+            status_code=404,
+            detail="会議室情報が見つかりません",
+        )
     return room
 
-@router.post(
-    "/", 
-    response_model=RoomResponse, 
-    status_code=201
-)
+
+@router.post("/", response_model=RoomResponse, status_code=201)
 def create_room_endpoint(
     room: RoomRequest,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -63,6 +67,7 @@ def create_room_endpoint(
         room,
         manager_id=current_user.id,
     )
+
 
 @router.put(
     "/{room_id}",
@@ -79,12 +84,12 @@ def update_room_endpoint(
 
     if db_room is None:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail="会議室情報が見つかりません",
         )
     if db_room.manager_id != current_user.id:
         raise HTTPException(
-            status_code=403, 
+            status_code=403,
             detail="この操作を行う権限がありません",
         )
 
@@ -94,6 +99,7 @@ def update_room_endpoint(
         room,
     )
     return room_update
+
 
 @router.delete(
     "/{room_id}",
@@ -109,9 +115,8 @@ def delete_room_endpoint(
     db_room = get_room_by_id(db, room_id)
     if db_room is None:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail="会議室情報が見つかりません",
-
         )
     if db_room.manager_id != current_user.id:
         raise HTTPException(
@@ -132,8 +137,3 @@ def delete_room_endpoint(
             status_code=404,
             detail="会議室情報が見つかりません",
         )
-    return
-    
-
-
-

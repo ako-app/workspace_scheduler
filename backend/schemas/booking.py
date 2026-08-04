@@ -1,5 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel, Field, ConfigDict, model_validator
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
 
 # 予約情報リクエストスキーマ
 class BookingRequest(BaseModel):
@@ -11,11 +13,11 @@ class BookingRequest(BaseModel):
     start_at: datetime = Field(
         ...,
         description="開始時刻",
-    ) 
+    )
     end_at: datetime = Field(
         ...,
-        description="終了時刻"
-    ) 
+        description="終了時刻",
+    )
     reserved_num: int = Field(
         ...,
         gt=0,
@@ -23,13 +25,10 @@ class BookingRequest(BaseModel):
         examples=[5],
     )
 
-
     @model_validator(mode="after")
     def validate_booking_time(self):
         if self.start_at >= self.end_at:
-            raise ValueError(
-                "終了時刻は開始時刻より後に設定してください"
-            )
+            raise ValueError("終了時刻は開始時刻より後に設定してください")
         return self
 
 
@@ -38,7 +37,7 @@ class BookingResponse(BaseModel):
     id: int = Field(
         ...,
         description="予約ID",
-        examples=[1]
+        examples=[1],
     )
     room_id: int = Field(
         ...,
@@ -57,21 +56,15 @@ class BookingResponse(BaseModel):
         ...,
         gt=0,
         description="予約人数",
-        examples=[5]  
+        examples=[5],
     )
     created_at: datetime = Field(
         ...,
         description="作成日時",
     )
-    updated_at: datetime =Field(
+    updated_at: datetime = Field(
         ...,
         description="更新日時",
-    ) 
-
-    model_config = ConfigDict(
-        from_attributes= True
     )
 
-
-
-
+    model_config = ConfigDict(from_attributes=True)

@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-from backend.routers.user import user_router , auth_router
-from backend.routers import room, booking
 from fastapi.staticfiles import StaticFiles
+
+from backend.routers import booking, room
+from backend.routers.user import auth_router, user_router
 from backend.views.pages import view_router
 
 app = FastAPI(
@@ -15,23 +16,23 @@ app.mount(
     StaticFiles(directory="frontend/static"),
     name="static",
 )
+
+
 # ルートエンドポイント
-@app.get(
-    "/api",
-    tags=["Root"]
-)
+@app.get("/api", tags=["Root"])
 def read_root():
     """APIのエンドポイント"""
     return {
         "message": "会議室予約システムにようこそ",
         "version": "1.0.0",
-        "docs" : "/docs",
-        "redoc" : "/redoc",
-         }
+        "docs": "/docs",
+        "redoc": "/redoc",
+    }
+
+
 # APIルーターと画面表示用ルーターを登録
 app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(room.router)
 app.include_router(booking.router)
 app.include_router(view_router)
-

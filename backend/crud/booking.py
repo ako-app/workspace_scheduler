@@ -1,12 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-from backend.models.booking import Booking
 from backend.core.exceptions import BookingConflictError
 from backend.database import commit_or_rollback
+from backend.models.booking import Booking
 from backend.schemas.booking import BookingRequest
+
 
 def get_booking_by_id(
     db: Session,
@@ -17,19 +18,15 @@ def get_booking_by_id(
     return db.scalar(stmt)
 
 
-
 def get_bookings(
-    db: Session, 
+    db: Session,
     skip: int = 0,
     limit: int = 100,
 ) -> list[Booking]:
     """予約一覧を取得する"""
-    stmt = (
-        select(Booking)
-        .offset(skip)
-        .limit(limit)
-    )
+    stmt = select(Booking).offset(skip).limit(limit)
     return db.scalars(stmt).all()
+
 
 def has_overlapping_booking(
     db: Session,
@@ -54,7 +51,7 @@ def has_overlapping_booking(
 def create_booking(
     db: Session,
     booking: BookingRequest,
-    user_id: int,    
+    user_id: int,
 ) -> Booking:
     """予約登録"""
     if has_overlapping_booking(
@@ -64,7 +61,7 @@ def create_booking(
         booking.end_at,
     ):
         raise BookingConflictError()
-    
+
     db_booking = Booking(
         user_id=user_id,
         room_id=booking.room_id,
@@ -72,12 +69,13 @@ def create_booking(
         end_at=booking.end_at,
         reserved_num=booking.reserved_num,
     )
-    
+
     db.add(db_booking)
     commit_or_rollback(db)
     db.refresh(db_booking)
 
     return db_booking
+
 
 def update_booking(
     db: Session,
@@ -88,7 +86,7 @@ def update_booking(
     db_booking = get_booking_by_id(db, booking_id)
     if db_booking is None:
         return None
-     
+
     if has_overlapping_booking(
         db,
         booking.room_id,
@@ -97,7 +95,7 @@ def update_booking(
         exclude_booking_id=booking_id,
     ):
         raise BookingConflictError()
-     
+
     db_booking.room_id = booking.room_id
     db_booking.start_at = booking.start_at
     db_booking.end_at = booking.end_at
@@ -108,21 +106,21 @@ def update_booking(
 
     return db_booking
 
+
 def delete_booking(
     db: Session,
     booking_id: int,
 ) -> bool:
     """予約削除"""
     db_booking = get_booking_by_id(
-        db, 
+        db,
         booking_id,
     )
 
     if db_booking is None:
         return False
-    
+
     db.delete(db_booking)
     commit_or_rollback(db)
 
     return True
-

@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
 
 # 会議室情報リクエストスキーマ
 class RoomRequest(BaseModel):
@@ -6,15 +7,16 @@ class RoomRequest(BaseModel):
         ...,
         max_length=12,
         description="会議室名",
-        examples=["会議室A"]
+        examples=["会議室A"],
     )
     capacity: int = Field(
         ...,
         gt=0,
         description="収容人数",
-        examples=[10], 
+        examples=[10],
     )
-    
+
+
 # 会議室情報レスポンススキーマ
 class RoomResponse(BaseModel):
     id: int = Field(
@@ -26,18 +28,12 @@ class RoomResponse(BaseModel):
         ...,
         max_length=12,
         description="会議室名",
-        examples=["会議室A"]
+        examples=["会議室A"],
     )
     capacity: int = Field(
         ...,
         gt=0,
         description="収容人数",
-        examples=[10]
+        examples=[10],
     )
-    model_config = ConfigDict(
-        from_attributes=True
-    )
-
-
-    
-
+    model_config = ConfigDict(from_attributes=True)

@@ -23,6 +23,7 @@ def test_user_common_booking_data(test_booking, test_room):
     assert test_booking["room_id"] == test_room["id"]
     assert test_booking["reserved_num"] == 3
 
+
 # ユーザー
 def test_create_user(client):
     """ユーザー登録に成功するテスト"""
@@ -91,6 +92,7 @@ def test_login_with_wrong_password(client, test_user):
 
     assert response_data["detail"] == "ユーザー名またはパスワードが正しくありません"
 
+
 # 会議室
 def test_create_room_without_authentication(client):
     """JWTなしで会議室作成に失敗するテスト"""
@@ -154,6 +156,7 @@ def test_read_room(client, test_room):
     assert response_data["room_name"] == test_room["room_name"]
     assert response_data["capacity"] == 10
 
+
 def test_read_room_not_found(client):
     """存在しない会議室の取得に失敗するテスト"""
     response = client.get("/rooms/999")
@@ -173,7 +176,7 @@ def test_update_room(client, auth_headers, test_room):
         json={
             "room_name": "updatedroom",
             "capacity": 20,
-        }
+        },
     )
     assert response.status_code == 200
 
@@ -182,6 +185,7 @@ def test_update_room(client, auth_headers, test_room):
     assert response_data["id"] == test_room["id"]
     assert response_data["room_name"] == "updatedroom"
     assert response_data["capacity"] == 20
+
 
 def test_update_room_not_found(client, auth_headers):
     """存在しない会議室の更新に失敗するテスト"""
@@ -198,6 +202,7 @@ def test_update_room_not_found(client, auth_headers):
     response_data = response.json()
 
     assert response_data["detail"] == "会議室情報が見つかりません"
+
 
 def test_update_room_no_authority(client, auth_headers, other_test_room):
     """他人の会議室の更新に失敗するテスト"""
@@ -224,9 +229,7 @@ def test_delete_room(client, auth_headers, test_room):
     )
     assert response.status_code == 204
 
-    get_response = client.get(
-        f"/rooms/{room_id}"
-    )
+    get_response = client.get(f"/rooms/{room_id}")
 
     assert get_response.status_code == 404
 
@@ -245,8 +248,8 @@ def test_delete_room_not_found(client, auth_headers):
 
 
 def test_delete_room_no_authority(
-    client, 
-    auth_headers, 
+    client,
+    auth_headers,
     other_test_room,
 ):
     """他人の会議室の削除に失敗するテスト"""
@@ -260,12 +263,13 @@ def test_delete_room_no_authority(
 
     assert response_data["detail"] == "この操作を行う権限がありません"
 
+
 def test_delete_room_with_booking(client, auth_headers, test_booking):
     """予約がある会議室の削除に失敗するテスト"""
     response = client.delete(
         f"/rooms/{test_booking['room_id']}",
         headers=auth_headers,
-    ) 
+    )
     assert response.status_code == 409
 
     response_data = response.json()
@@ -474,9 +478,7 @@ def test_update_booking_no_authority(
 
     response_data = response.json()
 
-    assert response_data["detail"] == (
-        "この操作を行う権限がありません"
-    )
+    assert response_data["detail"] == ("この操作を行う権限がありません")
 
 
 def test_update_booking_conflict(
@@ -556,9 +558,7 @@ def test_delete_booking_no_authority(
 
     response_data = response.json()
 
-    assert response_data["detail"] == (
-        "この操作を行う権限がありません"
-    )
+    assert response_data["detail"] == ("この操作を行う権限がありません")
 
 
 def test_delete_booking_without_authentication(

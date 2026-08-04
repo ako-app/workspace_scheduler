@@ -1,18 +1,18 @@
-import jwt
 from typing import Annotated
+
+import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
-
 from sqlalchemy.orm import Session
-from backend.database import get_db
+
 from backend.core.config import (
+    ALGORITHM,
     SECRET_KEY,
-    ALGORITHM,   
 )
 from backend.crud.user import get_user_by_username
+from backend.database import get_db
 from backend.models.user import User
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -38,10 +38,10 @@ def get_current_user(
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-        
+
     # データベースからユーザーを取得
     user = get_user_by_username(db, username)
     if user is None:
         raise credentials_exception
-        
+
     return user
