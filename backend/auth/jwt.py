@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from jose import jwt
+import jwt
 
 from backend.core.config import (
     SECRET_KEY,

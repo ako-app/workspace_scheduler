@@ -22,7 +22,7 @@ class Room(TimestampMixin, Base):
     manager_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"),
         nullable=False,  
-        comment="管理ユーザーID" 
+        comment="管理者ユーザーID" 
     )
 
     room_name: Mapped[str] = mapped_column(

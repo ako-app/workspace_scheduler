@@ -23,21 +23,22 @@ class UserUpdate(BaseModel):
         ...,
         min_length=2,
         max_length=12,
-        description="管理者ユーザー名",
+        description="ユーザー名",
         examples=["tanaka_taro"],
     )
-    
+
+     
 # 管理者ユーザー情報レスポンス用スキーマ
 class UserResponse(BaseModel):
     id: int = Field(
         ...,
-        description="管理者ユーザーID",
+        description="ユーザーID",
         examples=[1]
     )
     username: str = Field(
         ...,
         max_length=12,
-        description="管理者ユーザー名",
+        description="ユーザー名",
         examples=["tanaka_taro"],
     ) 
     model_config = ConfigDict(

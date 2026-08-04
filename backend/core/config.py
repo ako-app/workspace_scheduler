@@ -4,11 +4,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL: str = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URLが、.env に設定されていません")
 
-SECRET_KEY: str= os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 if SECRET_KEY is None:
     raise ValueError("SECRET_KEYが、.env に設定されていません")
 

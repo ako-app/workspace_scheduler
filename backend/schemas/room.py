@@ -14,6 +14,7 @@ class RoomRequest(BaseModel):
         description="収容人数",
         examples=[10], 
     )
+    
 # 会議室情報レスポンススキーマ
 class RoomResponse(BaseModel):
     id: int = Field(
