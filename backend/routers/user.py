@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
 from backend.database import get_db
 from backend.auth.jwt import create_access_token
@@ -24,9 +25,9 @@ user_router = APIRouter(
     response_model=list[UserResponse],     
 )
 def read_users(
+    db: Annotated[Session, Depends(get_db)],
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(get_db),
 ):
     """ユーザー一覧を取得する"""
     return get_users(db, skip=skip, limit=limit)
@@ -37,7 +38,7 @@ def read_users(
 )
 def read_user(
     user_id: int,
-    db: Session = Depends(get_db),
+    db: Annotated[Session, Depends(get_db)],
 ):
     """IDでユーザーを1件取得"""
     user = get_user_by_id(
@@ -55,7 +56,7 @@ def read_user(
 )
 def create_user_endpoint(
     user: UserRequest,
-    db: Session = Depends(get_db),
+    db: Annotated[Session, Depends(get_db)],
 ):
     """ユーザーを作成する"""
     existing_user = get_user_by_username(
@@ -80,7 +81,7 @@ def create_user_endpoint(
 def update_user_endpoint(
     user_id: int,
     user: UserUpdate,
-    db: Session = Depends(get_db),
+    db: Annotated[Session, Depends(get_db)],
 ):
     """ユーザーを更新する"""
     user_update = update_user(
@@ -99,7 +100,7 @@ def update_user_endpoint(
 )
 def delete_user_endpoint(
     user_id: int,
-    db: Session = Depends(get_db),
+    db: Annotated[Session, Depends(get_db)],
 ):
     """ユーザーを削除する"""
     user_delete = delete_user(
@@ -125,8 +126,8 @@ auth_router = APIRouter(
     response_model=TokenResponse,
 )
 def login_user_endpoint(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db),
+    form_data: Annotated[ OAuth2PasswordRequestForm, Depends()],
+    db: Annotated[Session, Depends(get_db)],
 ):
     """ユーザーのログイン管理"""
     user_auth = authenticate_user(

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import Annotated
 from backend.database import get_db
 from backend.auth.dependencies import get_current_user
 from backend.core.exceptions import BookingConflictError
@@ -23,10 +24,10 @@ router = APIRouter(
     response_model=list[BookingResponse],     
 )
 def read_bookings(
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
     skip: int = 0,
     limit: int = 100,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
 ):
     """予約一覧を取得する"""
     return get_bookings(
@@ -41,8 +42,8 @@ def read_bookings(
 )
 def read_booking(
     booking_id: int,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
 ):
     """IDで予約を1件取得"""
     booking = get_booking_by_id(
@@ -63,15 +64,15 @@ def read_booking(
 )
 def create_booking_endpoint(
     booking: BookingRequest,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
 ):
     """予約を作成する"""
     try:
         return create_booking(
             db,
             booking,
-            user_id = current_user.id
+            user_id=current_user.id,
         )
     except BookingConflictError as e:
         raise HTTPException(
@@ -86,8 +87,8 @@ def create_booking_endpoint(
 def update_booking_endpoint(
     booking_id: int,
     booking: BookingRequest,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
 ):
     """予約を更新する(本人のみ)"""
     db_booking = get_booking_by_id(db, booking_id)
@@ -122,8 +123,8 @@ def update_booking_endpoint(
 )
 def delete_booking_endpoint(
     booking_id: int,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
 ):
     """予約を削除する"""
     db_booking = get_booking_by_id(db, booking_id)
