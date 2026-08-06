@@ -8,6 +8,7 @@ from backend.crud.room import (
     create_room,
     delete_room,
     get_room_by_id,
+    get_room_by_name,
     get_rooms,
     update_room,
 )
@@ -62,6 +63,16 @@ def create_room_endpoint(
     db: Annotated[Session, Depends(get_db)],
 ):
     """会議室を作成する"""
+    existing_room = get_room_by_name(
+        db,
+        room.room_name,
+    )
+    if existing_room is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="この会議室名はすでに使用されています",
+        )
+
     return create_room(
         db,
         room,
@@ -80,7 +91,10 @@ def update_room_endpoint(
     db: Annotated[Session, Depends(get_db)],
 ):
     """会議室を更新する(管理者本人のみ)"""
-    db_room = get_room_by_id(db, room_id)
+    db_room = get_room_by_id(
+        db,
+        room_id,
+    )
 
     if db_room is None:
         raise HTTPException(
@@ -91,6 +105,17 @@ def update_room_endpoint(
         raise HTTPException(
             status_code=403,
             detail="この操作を行う権限がありません",
+        )
+
+    existing_room = get_room_by_name(
+        db,
+        room.room_name,
+    )
+
+    if existing_room is not None and existing_room.id != room_id:
+        raise HTTPException(
+            status_code=409,
+            detail="この会議室名はすでに使用されています",
         )
 
     room_update = update_room(

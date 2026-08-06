@@ -15,6 +15,15 @@ def get_room_by_id(
     return db.scalar(stmt)
 
 
+def get_room_by_name(
+    db: Session,
+    room_name: str,
+) -> Room | None:
+    """会議室名を1件取得"""
+    stmt = select(Room).where(Room.room_name == room_name)
+    return db.scalar(stmt)
+
+
 def get_rooms(
     db: Session,
     skip: int = 0,
