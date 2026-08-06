@@ -563,13 +563,13 @@ poetry run uvicorn backend.main:app --reload
 ### 6. ブラウザからアクセス
 
 ```text
-http://127.0.0.1:8000
+https://workspace-scheduler.onrender.com
 ```
 
 Swagger UIは以下から確認できます。
 
 ```text
-http://127.0.0.1:8000/docs
+https://workspace-scheduler.onrender.com/docs
 ```
 
 ### テストの実行
