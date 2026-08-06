@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
+from backend.auth.dependencies import get_current_user
 from backend.auth.jwt import create_access_token
 from backend.crud.user import (
     authenticate_user,
@@ -15,6 +16,7 @@ from backend.crud.user import (
     update_user,
 )
 from backend.database import get_db
+from backend.models.user import User
 from backend.schemas import TokenResponse, UserRequest, UserResponse, UserUpdate
 
 user_router = APIRouter(
@@ -87,19 +89,25 @@ def update_user_endpoint(
     user_id: int,
     user: UserUpdate,
     db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     """ユーザーを更新する"""
-    user_update = update_user(
+    if current_user.id != user_id:
+        raise HTTPException(
+            status_code=403,
+            detail="他のユーザー情報は更新できません",
+        )
+    updated_user = update_user(
         db,
         user_id,
         user,
     )
-    if user_update is None:
+    if updated_user is None:
         raise HTTPException(
             status_code=404,
             detail="ユーザー情報が見つかりません",
         )
-    return user_update
+    return updated_user
 
 
 @user_router.delete(
@@ -110,8 +118,14 @@ def update_user_endpoint(
 def delete_user_endpoint(
     user_id: int,
     db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     """ユーザーを削除する"""
+    if current_user.id != user_id:
+        raise HTTPException(
+            status_code=403,
+            detail="他のユーザー情報は削除できません",
+        )
     user_delete = delete_user(
         db,
         user_id,
