@@ -504,7 +504,7 @@ Renderへのデプロイ完了後に、公開URLを記載します。
 ### アプリケーション
 
 ```text
-Renderの公開URLを記載
+https://workspace-scheduler.onrender.com
 ```
 
 ### APIドキュメント
@@ -512,7 +512,7 @@ Renderの公開URLを記載
 FastAPIが自動生成するSwagger UIから、APIの仕様確認と動作確認ができます。
 
 ```text
-Renderの公開URL/docs
+https://workspace-scheduler.onrender.com/docs
 ```
 
 ---
@@ -563,13 +563,13 @@ poetry run uvicorn backend.main:app --reload
 ### 6. ブラウザからアクセス
 
 ```text
-https://workspace-scheduler.onrender.com
+http://127.0.0.1:8000
 ```
 
 Swagger UIは以下から確認できます。
 
 ```text
-https://workspace-scheduler.onrender.com/docs
+http://127.0.0.1:8000/docs
 ```
 
 ### テストの実行
