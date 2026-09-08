@@ -6,7 +6,7 @@ from backend.core.config import DATABASE_URL
 
 # エンジン作成
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}, echo=True
+    DATABASE_URL, echo=True
 )
 
 # Session生成クラス
