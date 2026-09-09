@@ -250,9 +250,11 @@ Googleカレンダーでも会議室をリソースとして登録し、予約�
 
 分析機能や清掃履歴管理などを同時に実装すると、MVPの完成が遅れる可能性がありました。
 
-#### 公開環境でのSQLite利用
+####  データベース環境の移行
 
-MVPではSQLiteを使用しているため、複数ユーザーによる同時利用や永続的な本番運用には課題があります。
+MVP初期段階ではSQLiteを使用していましたが、Docker対応に伴いPostgreSQLへ移行しました。
+
+現在は、FastAPIとPostgreSQLをDocker Composeで起動し、開発環境と実行環境の差を減らす構成にしています。
 
 #### 予約情報の公開範囲
 
@@ -266,7 +268,7 @@ MVPでは、会議室予約・管理に必要な機能に絞って実装しま�
 
 分析機能や可視化機能などは、本リリース機能として段階的に実装します。
 
-また、Docker対応後にPostgreSQLへ移行し、より本番運用に適した構成へ変更する予定です。
+また、Docker対応に伴いPostgreSQLへ移行し、FastAPIとPostgreSQLをDocker Composeで起動する構成へ変更しました。
 
 予約情報については、将来的に以下のように公開範囲を分けることを検討しています。
 
@@ -279,8 +281,8 @@ MVPでは、会議室予約・管理に必要な機能に絞って実装しま�
 
 ### データベース・インフラ
 
-- Docker対応
-- PostgreSQLへの移行
+- Docker環境の継続的な改善
+- PostgreSQL運用
 - AWSへのデプロイ
 
 ### データ分析・可視化
@@ -357,15 +359,40 @@ Fetch APIを使用して、バックエンドAPIとの通信を行っていま�
 
 ### データベース
 
-#### SQLite
+#### PostgreSQL
 
-MVPでは、ローカル環境および公開環境のデータベースとして使用しています。
+Docker環境での開発・実行用データベースとして使用しています。
 
 ユーザー、会議室、予約情報を管理しています。
 
-#### PostgreSQL
+SQLAlchemyから`psycopg`を利用して接続し、Alembicによってマイグレーションを管理しています。
 
-Docker対応後に、より本番運用に適したデータベースとして移行する予定です。
+
+#### SQLite
+
+MVP初期段階ではSQLiteを使用していましたが、Docker対応に伴いPostgreSQLへ移行しました。
+
+---
+
+### コンテナ
+
+#### Docker
+
+FastAPIアプリケーションの実行環境を統一するために使用しています。
+
+#### Docker Compose
+
+FastAPIとPostgreSQLのコンテナをまとめて起動・管理するために使用しています。
+
+---
+
+### PostgreSQLドライバ
+
+#### psycopg
+
+SQLAlchemyからPostgreSQLへ接続するために使用しています。
+
+本アプリでは、同期処理のデータベース接続に`psycopg`を利用しています。
 
 ---
 
@@ -520,9 +547,11 @@ https://workspace-scheduler.onrender.com/docs
 
 ### 前提環境
 
+- Docker
+- Docker Compose
+- Git
 - Python 3.14
 - Poetry
-- Git
 
 ### 1. リポジトリをクローン
 
@@ -531,13 +560,7 @@ git clone <リポジトリURL>
 cd workspace_scheduler
 ```
 
-### 2. 依存パッケージをインストール
-
-```bash
-poetry install
-```
-
-### 3. 環境変数ファイルを作成
+### 2. 環境変数ファイルを作成
 
 `.env.example`をコピーして、`.env`を作成します。
 
@@ -547,28 +570,35 @@ cp .env.example .env
 
 作成した`.env`に必要な環境変数を設定します。
 
-### 4. マイグレーションを実行
+### 3. Dockerコンテナをビルド・起動
 
 ```bash
-poetry run alembic upgrade head
+docker compose up --build
 ```
+PostgreSQLの起動完了後、Alembicによるマイグレーションが実行され、その後FastAPIが起動します。
 
-### 5. アプリケーションを起動
+バックグラウンドで起動する場合は以下を使用します。
 
 ```bash
-poetry run uvicorn backend.main:app --reload
+docker compose up -d
 ```
 
-### 6. ブラウザからアクセス
+### 4. ブラウザからアクセス
 
 ```text
-http://127.0.0.1:8000
+http://localhost:8000
 ```
 
 Swagger UIは以下から確認できます。
 
 ```text
-http://127.0.0.1:8000/docs
+http://localhost:8000/docs
+```
+
+### 5. アプリケーションの停止
+
+```bash
+docker compose down
 ```
 
 ### テストの実行
