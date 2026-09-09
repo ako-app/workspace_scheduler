@@ -5,9 +5,7 @@ from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from backend.core.config import DATABASE_URL
 
 # エンジン作成
-engine = create_engine(
-    DATABASE_URL, echo=True
-)
+engine = create_engine(DATABASE_URL, echo=True)
 
 # Session生成クラス
 SessionLocal = sessionmaker(
