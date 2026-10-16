@@ -10,7 +10,7 @@ app = FastAPI(
     description="会議室の予約を管理することにより、管理業務を効率化するためのREST API",
     version="1.0.0",
 )
-# # CSS・JavaScript・画像などの静的ファイルを配信
+# CSS・JavaScript・画像などの静的ファイルを配信
 app.mount(
     "/static",
     StaticFiles(directory="frontend/static"),
