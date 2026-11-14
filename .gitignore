@@ -19,3 +19,5 @@ __pycache__/
 .coverage
 htmlcov/
 coverage.xml
+# PostgreSQL backups
+/backups/
