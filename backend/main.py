@@ -34,7 +34,7 @@ def read_root():
 @app.get("/health", status_code=200, tags=["Health"])
 def health_check():
     """ALBからヘルスチェックを応答する"""
-    return{"status": "ok"}
+    return {"status": "ok"}
 
 
 # APIルーターと画面表示用ルーターを登録
